@@ -1,0 +1,6 @@
+${AnsiBackground.WHITE}${AnsiColor.BLUE}
+               __
+ /\  _|_ _ |  (_ . _|_ _ _  _  _
+/--\_)|_(_||  __)|_)|_(-|||(_|_)
+
+:: https://www.astalsistemas.es ::${AnsiBackground.DEFAULT}${AnsiColor.DEFAULT}

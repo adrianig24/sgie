@@ -1,0 +1,8 @@
+# Ficheros ignorados
+mpic_back.iml
+db/*.db
+
+# Directorios
+.idea
+target
+logs

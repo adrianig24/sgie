@@ -1,0 +1,58 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: mpic-back
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:file:./db/mpicdb;AUTO_SERVER=TRUE;DB_CLOSE_ON_EXIT=TRUE
+    username: sa
+    password:
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        use_sql_comments: true
+        format_sql: true
+        show_sql: true
+
+  jackson:
+    serialization.write_dates_as_timestamps: false
+    default-property-inclusion: NON_NULL
+    serialization.fail-on-empty-beans: false
+
+  main:
+    allow-bean-definition-overriding: true
+
+logging:
+  config: "file:./logback-spring.xml"
+
+jwt:
+  secret: my-MPI.APP-secret
+
+file:
+  reports-dir: reports/
+  reports-parsed-dir: reports-parsed/
+  reports-parsed-dir-err: reports-parsed/error/
+  reports-extension: html
+
+job:
+  # https://www.freeformatter.com/cron-expression-generator-quartz.html
+  # 30 min
+  finder: 0 */30 * ? * *
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+      cors:
+        allowed-origins: "*"
+        allowed-methods: GET
+        allowed-headers: "*"
