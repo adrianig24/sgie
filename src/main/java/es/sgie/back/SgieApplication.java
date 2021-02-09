@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  * Main class
  */
 @SpringBootApplication
-@EnableJpaRepositories(basePackages="es.astal.mpic.back.repository")
+@EnableJpaRepositories(basePackages="es.sgie.back.repository")
 public class SgieApplication {
 
     /**
