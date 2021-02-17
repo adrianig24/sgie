@@ -13,8 +13,7 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = false)
 @Entity
 @Table
-public class Note {
-
+public class Record {
     @Id
     @GeneratedValue
     @Column(name = "ID", columnDefinition = "uuid", updatable = false)
@@ -22,12 +21,7 @@ public class Note {
 
     @Column
     @NotNull
-    private String title;
-
-    @Column
-    @NotNull
-    private String text;
-
+    private int counter;
 
 
 }

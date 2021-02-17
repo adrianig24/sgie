@@ -4,7 +4,7 @@ package es.sgie.back.domain.enums;
  * Enum for kind of users
  */
 public enum Kind {
-    CUSTOMER("CTM"), MEDICAL("DGC"), ADMIN("ADM");
+    CUSTOMER("CTM"), PSYCHOLOGIST("PSY"), ADMIN("ADM");
 
     private String kind;
 

@@ -13,7 +13,7 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = false)
 @Entity
 @Table
-public class Note {
+public class Group {
 
     @Id
     @GeneratedValue
@@ -22,12 +22,6 @@ public class Note {
 
     @Column
     @NotNull
-    private String title;
-
-    @Column
-    @NotNull
-    private String text;
-
-
+    private String day;
 
 }

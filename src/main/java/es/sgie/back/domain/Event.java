@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -13,8 +14,7 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = false)
 @Entity
 @Table
-public class Note {
-
+public class Event {
     @Id
     @GeneratedValue
     @Column(name = "ID", columnDefinition = "uuid", updatable = false)
@@ -28,6 +28,7 @@ public class Note {
     @NotNull
     private String text;
 
-
-
+    @OneToMany(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "user_id",referencedColumnName = "id")
+    private List<User> user;
 }

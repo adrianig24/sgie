@@ -7,6 +7,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -28,12 +29,17 @@ public abstract class User {
     @NotNull
     private Date created = new Date();
 
-    /**
-     * PersonalIdentCode: Ident code. Random text for customers and email for others
-     */
+    @Column
+    @NotNull
+    private String name;
+
+    @Column
+    @NotNull
+    private String firstName;
+
     @Column(unique = true)
     @NotNull
-    private String pic;
+    private String DNI;
 
     @Column
     @NotNull
@@ -47,6 +53,14 @@ public abstract class User {
     @Enumerated(EnumType.STRING)
     @NotNull
     private Kind kind;
+
+    @OneToOne(optional = true)
+    @JoinColumn(name = "group_id", nullable = true,updatable = true,unique = true)
+    private Group group;
+
+   @OneToMany(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "note_id",referencedColumnName = "id")
+    private List<Note> note;
 
     /**
      * Authorization role

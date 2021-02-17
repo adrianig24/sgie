@@ -1,8 +1,5 @@
 package es.sgie.back.service.impl;
 
-import es.sgie.back.domain.UAdmin;
-import es.sgie.back.domain.UCustomer;
-import es.sgie.back.domain.UPsychologist;
 import es.sgie.back.domain.User;
 import es.sgie.back.domain.enums.Kind;
 import es.sgie.back.exception.ServiceException;
@@ -49,7 +46,7 @@ public class UserServiceImpl implements UserService {
                 return user;
             }
 
-            if (connected.getPic() == user.getPic()) {
+            if (connected.getDNI() == user.getDNI()) {
                 return user;
             } else {
                 log.error("User whith id: " + connected.getId() + ", get information about different user id: " + user.getId());
@@ -72,18 +69,57 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UCustomer takeTests(String pic) throws ServiceException {
+    public User createUser(User user) throws ServiceException {
 
-        User u = this.findByPic(pic);
+        user.setActive(Boolean.TRUE);
+       // user.setPic(user.getDNI());
+        user.setPassword(this.bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setKind(Kind.ADMIN);
 
-        if (u instanceof UCustomer) {
-            UCustomer uc = (UCustomer) u;
-
-            return uc;
+        try {
+            return this.userRepostory.save(user);
+        } catch (Exception e) {
+            log.error("Error creating Admin with data: " + user.toString());
+            throw new ServiceException("Error in UserServiceImpl.createAdmin: ", e);
         }
-        return null;
+    }
+
+    @Override
+    public User updateUser(User user) throws ServiceException {
+        if (user == null || user.getId() == null) {
+            log.error("Argument 'user' is null in UserServiceImpl.updateAdmin");
+            throw new IllegalArgumentException("Argument 'user' is null in UserServiceImpl.updateAdmin");
+        }
+
+        try {
+            return this.userRepostory.save(user);
+        } catch (Exception e) {
+            log.error("Error updating User with data: " + user.toString());
+            throw new ServiceException("Error in UserServiceImpl.updateAdmin: ", e);
+        }
 
     }
+
+    @Override
+    public void disableUser(UUID id) throws ServiceException {
+        if (id == null) {
+            log.error("Argument 'id' is null in UserServiceImpl.disableAdmin");
+            throw new IllegalArgumentException("Argument 'id' is null in UserServiceImpl.disableAdmin");
+        }
+
+        try {
+            User a = this.findById(id);
+            a.setActive(Boolean.FALSE);
+            a.setPassword(this.bCryptPasswordEncoder.encode(StringUtils.getDisabledPassword()));
+            this.updateUser((User) a);
+        } catch (Exception e) {
+            log.error("Error disabling User with id: " + id);
+            throw new ServiceException("Error in UserServiceImpl.disableAdmin: ", e);
+        }
+    }
+
+
+
 
     @Override
     public UserDetails loadUserByPic(String pic) throws ServiceException {
@@ -102,109 +138,6 @@ public class UserServiceImpl implements UserService {
         return u;
     }
 
-    @Override
-    public UAdmin createAdmin(UAdmin admin) throws ServiceException {
-        if (admin == null) {
-            log.error("Argument 'admin' is null in UserServiceImpl.createAdmin");
-            throw new IllegalArgumentException("Argument 'admin' is null in UserServiceImpl.createAdmin");
-        }
-
-        admin.setActive(Boolean.TRUE);
-        admin.setPic(admin.getEmail());
-        admin.setPassword(this.bCryptPasswordEncoder.encode(admin.getPassword()));
-        admin.setKind(Kind.ADMIN);
-
-        try {
-            return this.userRepostory.save(admin);
-        } catch (Exception e) {
-            log.error("Error creating Admin with data: " + admin.toString());
-            throw new ServiceException("Error in UserServiceImpl.createAdmin: ", e);
-        }
-    }
-
-    @Override
-    public UAdmin updateAdmin(UAdmin admin) throws ServiceException{
-        if (admin == null || admin.getId() == null) {
-            log.error("Argument 'admin' is null in UserServiceImpl.updateAdmin");
-            throw new IllegalArgumentException("Argument 'admin' is null in UserServiceImpl.updateAdmin");
-        }
-
-        try {
-            return this.userRepostory.save(admin);
-        } catch (Exception e) {
-            log.error("Error updating User with data: " + admin.toString());
-            throw new ServiceException("Error in UserServiceImpl.updateAdmin: ", e);
-        }
-    }
-
-    @Override
-    public void disableAdmin(UUID id)throws ServiceException {
-        if (id == null) {
-            log.error("Argument 'id' is null in UserServiceImpl.disableAdmin");
-            throw new IllegalArgumentException("Argument 'id' is null in UserServiceImpl.disableAdmin");
-        }
-
-        try {
-            User a = this.findById(id);
-            a.setActive(Boolean.FALSE);
-            a.setPassword(this.bCryptPasswordEncoder.encode(StringUtils.getDisabledPassword()));
-            this.updateAdmin((UAdmin) a);
-        } catch (Exception e) {
-            log.error("Error disabling User with id: " + id);
-            throw new ServiceException("Error in UserServiceImpl.disableAdmin: ", e);
-        }
-    }
-
-    @Override
-    public UPsychologist createMedical(UPsychologist medical) throws ServiceException {
-        if (medical == null) {
-            log.error("Argument 'medical' is null in UserServiceImpl.createMedical");
-            throw new IllegalArgumentException("Argument 'medical' is null in UserServiceImpl.createMedical");
-        }
-
-        medical.setActive(Boolean.TRUE);
-        medical.setPic(medical.getEmail());
-        medical.setPassword(this.bCryptPasswordEncoder.encode(medical.getPassword()));
-        medical.setKind(Kind.MEDICAL);
-
-        try {
-            return this.userRepostory.save(medical);
-        } catch (Exception e) {
-            log.error("Error creating Medical with data: " + medical.toString());
-            throw new ServiceException("Error in UserServiceImpl.createMedical: ", e);
-        }
-    }
-
-    @Override
-    public UCustomer createCustomer(UCustomer customer) throws ServiceException {
-        if (customer == null) {
-            log.error("Argument 'customer' is null in UserServiceImpl.createCustomer");
-            throw new IllegalArgumentException("Argument 'customer' is null in UserServiceImpl.createCustomer");
-        }
-
-        // PIC must be unique
-        String PIC = null;
-        Optional<User> u = null;
-
-        //do-while to protect code from unprovable identical PICs
-        do {
-            PIC = StringUtils.getInitialPIC();
-            u = this.userRepostory.findByPic(PIC);
-        } while (u.isPresent());
-
-        customer.setActive(Boolean.TRUE);
-        customer.setKind(Kind.CUSTOMER);
-        customer.setPassword(this.bCryptPasswordEncoder.encode(customer.getPassword()));
-        customer.setPic(PIC);
-
-        try {
-            return this.userRepostory.save(customer);
-        } catch (Exception e) {
-            log.error("Error creating Customer with data: " + customer.toString());
-            throw new ServiceException("Error in UserServiceImpl.createCustomer: ", e);
-        }
-    }
-
     public User getUserFromSecurityContext() throws ServiceException {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
@@ -212,5 +145,7 @@ public class UserServiceImpl implements UserService {
 
         return this.findByPic(username);
     }
+
+
 
 }
