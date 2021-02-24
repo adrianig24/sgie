@@ -10,10 +10,10 @@
         <version>2.3.3.RELEASE</version>
     </parent>
 
-    <groupId>es.astal.mpic.back</groupId>
-    <artifactId>mpic_back</artifactId>
+    <groupId>es.sgie.back</groupId>
+    <artifactId>sgie</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>MPIC APP Back</name>
+    <name>SGIE APP Back</name>
 
     <properties>
         <java.version>11</java.version>

@@ -3,11 +3,11 @@ server:
 
 spring:
   application:
-    name: mpic-back
+    name: sgie-back
 
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:C:\workspace\sgie\db\mpicdb.mv.db;AUTO_SERVER=TRUE;DB_CLOSE_ON_EXIT=TRUE
+    url: jdbc:h2:C:\workspace\sgie\db\sgiedb.mv.db;AUTO_SERVER=TRUE;DB_CLOSE_ON_EXIT=TRUE
     username: sa
     password:
 
@@ -36,16 +36,12 @@ logging:
 jwt:
   secret: my-MPI.APP-secret
 
-file:
-  reports-dir: reports/
-  reports-parsed-dir: reports-parsed/
-  reports-parsed-dir-err: reports-parsed/error/
-  reports-extension: html
 
-job:
-  # https://www.freeformatter.com/cron-expression-generator-quartz.html
-  # 30 min
-  finder: 0 */30 * ? * *
+
+  #job:
+       # https://www.freeformatter.com/cron-expression-generator-quartz.html
+       # 30 min
+  # finder: 0 */30 * ? * *
 
 management:
   endpoints:
